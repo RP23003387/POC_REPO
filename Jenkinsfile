@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_NAME = 'BKUP-TEST-image'
+        DOCKER_IMAGE_NAME = 'bkup-test-image'
         PUPPET_SCRIPT_PATH = '/tmp/6269405p/work/6269405p_poc_repo/script_to_run_new'
         GIT_REPO_URL = 'https://github.com/RP23003387/POC_REPO.git'
         TARGET_USER = 'raju'
