@@ -20,18 +20,21 @@ pipeline {
         stage('Backup and Update TEST Server') {
             steps {
                 catchError(buildResult: 'SUCCESS') {
-                    sh 'docker stop $DOCKER_IMAGE_NAME || true'
-                    sh 'docker rm $DOCKER_IMAGE_NAME || true'
-                    sh "docker commit TESTsvr6269405p $DOCKER_IMAGE_NAME"
                     sh '''
                         #!/bin/bash
-                        puppet resource file /tmp/6269405p/work ensure=absent force=true;
-                        puppet resource file /tmp/6269405p/work ensure=directory;
-                        cd /tmp/6269405p/work;
+                        set -e  # Exit on error
+
+                        docker stop $DOCKER_IMAGE_NAME || true
+                        docker rm $DOCKER_IMAGE_NAME || true
+                        docker commit TESTsvr6269405p $DOCKER_IMAGE_NAME
+
+                        puppet resource file /tmp/6269405p ensure=directory
+                        cd /tmp/6269405p
                         git clone $GIT_REPO_URL
-                        targets=$TEST_TARGET;
-                        locate_script='$PUPPET_SCRIPT_PATH';
-                        bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root;
+
+                        targets=$TEST_TARGET
+                        locate_script='$PUPPET_SCRIPT_PATH'
+                        bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root
                     '''
                     echo 'ST26269405p: TEST server is backup and updated'
                 }
@@ -60,11 +63,13 @@ pipeline {
                         catchError(buildResult: 'SUCCESS') {
                             sh '''
                                 #!/bin/bash
-                                puppet resource file /tmp/6269405p/work ensure=absent force=true;
-                                puppet resource file /tmp/6269405p/work ensure=directory;
-                                targets=$PRODUCTION_TARGET;
-                                locate_script='$PUPPET_SCRIPT_PATH';
-                                bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root;
+                                set -e  # Exit on error
+
+                                puppet resource file /tmp/6269405p ensure=directory
+                                cd /tmp/6269405p
+                                targets=$PRODUCTION_TARGET
+                                locate_script='$PUPPET_SCRIPT_PATH'
+                                bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root
                             '''
                             echo 'ST66269405p: Production server is updated'
                         }
