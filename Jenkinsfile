@@ -1,17 +1,17 @@
 pipeline {
     agent any
     stages {
-        stage('ST16269405P') {
+        stage('ST16269405p') {
             steps {
-                echo 'Continue from previous phase: Ready to deploy next environment.'
+                echo "ST16269405p: Environement is prepared. Start to roll out to Test server"
             }
         }
-        stage('ST26269405P') {
+        stage('ST26269405p') {
             steps {
                 input('Do you want to update to UAT container?')
             }
         }
-        stage('ST36269405P') {
+        stage('ST36269405p') {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
@@ -30,12 +30,12 @@ pipeline {
                 }
             }
         }
-        stage('ST46269405P') {
+        stage('ST46269405p') {
             steps {
                 input('Do you want to deploy to Production container?')
             }
         }
-        stage('ST56269405P') {
+        stage('ST56269405p') {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
