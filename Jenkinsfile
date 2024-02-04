@@ -17,8 +17,9 @@ pipeline {
                     #!/bin/bash
                     puppet resource file /tmp/6269405p/work ensure=absent force=true;
                     puppet resource file /tmp/6269405p/work ensure=directory;
+                    mkdir -p /tmp/6269405p;
                     cd /tmp/6269405p/work;
-                    git clone https://github.com/RP23003387/POC_REPO.git
+                    git clone https://github.com/RP23003387/POC_REPO.git;
                     targets=TESTsvr6269405p;
                     locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_new';
                     bolt script run $locate_script -t $targets -u raju -p raju --no-host-key-check --run-as root;
@@ -51,6 +52,9 @@ pipeline {
                             #!/bin/bash
                             puppet resource file /tmp/6269405p/work ensure=absent force=true;
                             puppet resource file /tmp/6269405p/work ensure=directory;
+                            mkdir -p /tmp/6269405p;
+                            cd /tmp/6269405p/work;
+                            git clone https://github.com/RP23003387/POC_REPO.git;
                             targets=PRODsvr6269405p;
                             locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_new';
                             bolt script run $locate_script -t $targets -u raju -p raju --no-host-key-check --run-as root;
