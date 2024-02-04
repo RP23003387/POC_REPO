@@ -17,7 +17,7 @@ pipeline {
                     #!/bin/bash
                     puppet resource file /tmp/6269405p/work ensure=absent force=true;
                     puppet resource file /tmp/6269405p/work ensure=directory;
-                    cd /tmp/56269405p/work;
+                    cd /tmp/6269405p/work;
                     git clone https://github.com/RP23003387/POC_REPO.git
                     targets=TESTsvr6269405p;
                     locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_new';
