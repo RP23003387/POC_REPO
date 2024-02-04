@@ -42,9 +42,9 @@ pipeline {
             steps {
                 script {
                     sh """
-                    targets=prodsvr626940p.local
-                    locate_script='/tmp/clone/devops_repo/script_to_run'
-                    bolt script run \$locate_script -t \$targets -u clientadm -p user123 --no-host-key-check --run-as root
+                    targets=prodsvr6269405p.localdomain
+                    locate_script='/tmp/clone/POC_REPO/script_to_run'
+                    bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "Production container updated"
                     """
                 }
