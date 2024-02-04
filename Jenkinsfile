@@ -14,10 +14,12 @@ pipeline {
                 sh 'docker rm bkup-test-image || true'
                 sh 'docker commit TESTsvr6269405p bkup-test-image'
                 sh '''
+                    #!/bin/bash
                     mkdir -p /tmp/6269405p/work
                     puppet resource file /tmp/6269405p/work ensure=absent force=true
                     puppet resource file /tmp/6269405p/work ensure=directory
                     cd /tmp/6269405p/work
+                    rm -rf POC_REPO  # Remove if it already exists
                     git clone https://github.com/RP23003387/POC_REPO.git
                     targets=TESTsvr6269405p
                     locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_new'
@@ -30,7 +32,7 @@ pipeline {
 
         stage('ST36269405p') {
             steps {
-                sh 'curl -is http://TESTsvr6269405p.localdomain | head -n 1 > /tmp/TEST-result-file'
+                sh 'curl -is http://testsvr6269405p.localdomain | head -n 1 > /tmp/TEST-result-file'
                 echo 'ST36269405p: Test result for TEST server is generated: TEST-result-file'
             }
         }
@@ -48,22 +50,22 @@ pipeline {
                     if (input == 'Proceed Production') {
                         echo 'ST56269405p: Proceed to Production Phase'
                         sh '''
+                            #!/bin/bash
                             mkdir -p /tmp/6269405p/work
                             puppet resource file /tmp/6269405p/work ensure=absent force=true
                             puppet resource file /tmp/6269405p/work ensure=directory
                             cd /tmp/6269405p/work
-                            git clone https://github.com/RP23003387/POC_REPO.git
                             targets=PRODsvr6269405p
                             locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_new'
                             bolt script run $locate_script -t $targets -u raju -p raju --no-host-key-check --run-as root
                         '''
-                        echo 'ST56269405p: Production server is updated'
+                        echo 'ST66269405p: Production server is updated'
                     } else {
                         echo 'ST56269405p: Rollback Test server'
                         sh 'docker stop TESTsvr6269405p || true'
                         sh 'docker rm TESTsvr6269405p || true'
                         sh 'docker run --name TESTsvr6269405p -d bkup-test-image'
-                        echo 'ST56269405p: TEST server is rollback'
+                        echo 'ST66269405p: TEST server is rollback'
                     }
                 }
             }
