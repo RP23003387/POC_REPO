@@ -15,9 +15,9 @@ pipeline {
                 sh 'docker commit TESTsvr6269405p bkup-test-image'
                 sh '''
                     #!/bin/bash
+                    mkdir -p /tmp/6269405p/work
                     puppet resource file /tmp/6269405p/work ensure=absent force=true;
                     puppet resource file /tmp/6269405p/work ensure=directory;
-                    mkdir -p /tmp/6269405p;
                     cd /tmp/6269405p/work;
                     git clone https://github.com/RP23003387/POC_REPO.git;
                     targets=TESTsvr6269405p;
@@ -50,9 +50,9 @@ pipeline {
                         echo 'ST56269405p: Proceed to Production Phase'
                         sh '''
                             #!/bin/bash
+                            mkdir -p /tmp/6269405p/work
                             puppet resource file /tmp/6269405p/work ensure=absent force=true;
                             puppet resource file /tmp/6269405p/work ensure=directory;
-                            mkdir -p /tmp/6269405p;
                             cd /tmp/6269405p/work;
                             git clone https://github.com/RP23003387/POC_REPO.git;
                             targets=PRODsvr6269405p;
