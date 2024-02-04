@@ -24,7 +24,7 @@ pipeline {
                     git clone https://github.com/RP23003387/POC_REPO.git
                     targets=testsvr6269405p.localdomain
                     locate_script='/tmp/clone/POC_REPO/script_to_run'
-                    bolt script run \$locate_script -t \$targets -u root -p ubuntu --no-host-key-check --run-as root
+                    bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "UAT container updated"
                     """
                 }
