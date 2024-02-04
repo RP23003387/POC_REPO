@@ -20,23 +20,23 @@ pipeline {
         stage('Backup and Update TEST Server') {
             steps {
                 catchError(buildResult: 'SUCCESS') {
-                    sh '''
-                        #!/bin/bash
-                        set -e  # Exit on error
+                    script {
+                        sh '''
+                            set -e
+                            docker stop $DOCKER_IMAGE_NAME || true
+                            docker rm $DOCKER_IMAGE_NAME || true
+                            docker commit TESTsvr6269405p $DOCKER_IMAGE_NAME
 
-                        docker stop $DOCKER_IMAGE_NAME || true
-                        docker rm $DOCKER_IMAGE_NAME || true
-                        docker commit TESTsvr6269405p $DOCKER_IMAGE_NAME
+                            puppet resource file /tmp/6269405p ensure=directory
+                            cd /tmp/6269405p
+                            git clone $GIT_REPO_URL
 
-                        puppet resource file /tmp/6269405p ensure=directory
-                        cd /tmp/6269405p
-                        git clone $GIT_REPO_URL
-
-                        targets=$TEST_TARGET
-                        locate_script='$PUPPET_SCRIPT_PATH'
-                        bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root
-                    '''
-                    echo 'ST26269405p: TEST server is backup and updated'
+                            targets=$TEST_TARGET
+                            locate_script=$PUPPET_SCRIPT_PATH
+                            bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root
+                        '''
+                        echo 'ST26269405p: TEST server is backup and updated'
+                    }
                 }
             }
         }
@@ -51,7 +51,9 @@ pipeline {
         stage('Inspect Test Result') {
             steps {
                 echo 'ST46269405p: Test server\'s testing result has been inspected'
-                input 'Proceed Production or Rollback Test?'
+                script {
+                    input message: 'Proceed Production or Rollback Test?', submitter: 'jadmin'
+                }
             }
         }
 
@@ -62,13 +64,11 @@ pipeline {
                         echo 'ST56269405p: Proceed to Production Phase'
                         catchError(buildResult: 'SUCCESS') {
                             sh '''
-                                #!/bin/bash
-                                set -e  # Exit on error
-
+                                set -e
                                 puppet resource file /tmp/6269405p ensure=directory
                                 cd /tmp/6269405p
                                 targets=$PRODUCTION_TARGET
-                                locate_script='$PUPPET_SCRIPT_PATH'
+                                locate_script=$PUPPET_SCRIPT_PATH
                                 bolt script run $locate_script -t $targets -u $TARGET_USER -p $TARGET_PASSWORD --no-host-key-check --run-as root
                             '''
                             echo 'ST66269405p: Production server is updated'
