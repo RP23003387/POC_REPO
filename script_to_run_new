@@ -1,0 +1,21 @@
+# Filename: script_to_run
+# !/bin/bash
+Puppet resource package git ensure=present
+
+# Use Puppet command to ensure apache2 service is installed and running 
+puppet resource service apache2 ensure=running 
+
+# Use Puppet command to remove directory /tmp/6269405P/work and recreate director /tmp/6269405P/work
+puppet resource file /tmp/6269405P/work ensure=absent force=true
+puppet resource file /tmp/6269405P/work ensure=directory 
+
+# Clone 6269405P_poc_rov to container’s /tmp/6269405P/work
+#puppet resource git /tmp/8668106t/work ensure=present source=https://github.com/adn1234567/6269405P_poc_repo.git
+cd /tmp/6269405P/work
+git clone https://github.com/adn1234567/8668106t_poc_repo.git
+
+
+# Copy new index.html to replace /var/www/html/index.html
+puppet resource file /var/www/html/index.html ensure=absent
+puppet resource file /var/www/html/index.html ensure=file source=/tmp/6269405P/work/6269405P_poc_repo/index.html
+#cp -p /tmp/6269405P/work/6269405P_poc_repo/index.html /var/www/html
