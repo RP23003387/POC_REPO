@@ -6,12 +6,7 @@ pipeline {
                 echo "ST16269405p: Environement is prepared. Start to roll out to Test server"
             }
         }
-        stage('ST26269405p') {
-            steps {
-                input('Do you want to update to UAT container?')
-            }
-        }
-        stage('ST36269405p') {
+          stage('ST26269405p') {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
@@ -28,6 +23,12 @@ pipeline {
                     echo "UAT container updated"
                     """
                 }
+            }
+        }
+      
+        stage('ST36269405p') {
+            steps {
+                input('Do you want to update to UAT container?')
             }
         }
         stage('ST46269405p') {
