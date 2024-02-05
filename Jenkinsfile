@@ -21,7 +21,7 @@ pipeline
 				puppet resource file /tmp/6269405p/work ensure=directory;
 				cd /tmp/6269405p/work;
 				git clone https://github.com/RP23003387/POC_REPO.git;
-				targets=TESTsvrST16269405p;
+				targets=TESTsvrST6269405p;
 				locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_final';
 				bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root;
 				'''
