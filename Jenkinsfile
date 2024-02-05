@@ -1,12 +1,6 @@
 pipeline 
 {
 	agent any
-
-	triggers
-	{
-		pollSCM('H/5 * * * *')
-	}
-
       	stages 
 	{
 		stage('ST16269405p') 
@@ -16,26 +10,22 @@ pipeline
             			echo 'ST16269405p: Environment is prepared. Start to rollout to TEST server'
           		}
           	}
-		stage('ST16269405p') 
+		stage('ST26269405p') 
 		{
 	          	steps 
 			{
-
 				sh '''#!/bin/bash
-				rm /tmp/BKUP-TEST-image.tar
+				docker rm -f bkup-test-image 
 				docker commit TESTsvr6269405p bkup-test-image
-				docker save -o /tmp/BKUP-TEST-image.tar bkup-test-image
-
-				puppet resource file /tmp/clone ensure=absent force=true;
-				puppet resource file /tmp/clone ensure=directory;
-				cd /tmp/clone;
+				puppet resource file /tmp/6269405p/work ensure=absent force=true;
+				puppet resource file /tmp/6269405p/work ensure=directory;
+				cd /tmp/6269405p/work;
 				git clone https://github.com/RP23003387/POC_REPO.git;
 				targets=TESTsvrST16269405p;
-				locate_script='/tmp/clone/POC_REPO/script_to_run_final';
-				bolt script run $locate_script -t $targets -u raju -p raju --no-host-key-check --run-as root;
+				locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_final';
+				bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root;
 				'''
 				echo 'ST26269405p: TEST server is backup and updated'
-
 	          	}
           	}
           	stage('ST36269405p') 
@@ -73,8 +63,8 @@ pipeline
 		
 						sh '''#!/bin/bash
 						targets=PRODsvr6269405p;
-						locate_script='/tmp/clone/POC_REPO/script_to_run_final';
-						bolt script run $locate_script -t $targets -u raju -p raju --no-host-key-check --run-as root;
+						locate_script='/tmp/6269405p/work/POC_REPO/script_to_run_final';
+						bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root;
 						'''
 		                   	} 
 					else
@@ -93,20 +83,17 @@ pipeline
 		{
           		steps 
 			{
-
-		                script 
+		               script 
 				{
-		                   	if (v2 == 'Proceed Production') 
+		                  	if (v2 == 'Proceed Production') 
 					{
 						echo 'ST66269405p: Production server is updated'
-
 		                   	} 
 					else
 					{
 		  	            		echo "ST66269405p: TEST server is rollback"
 		                   	}		      
 		                }  
-            			
           		}
           	}
 	}
