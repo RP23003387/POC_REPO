@@ -20,7 +20,7 @@ pipeline {
                     targets=testsvr6269405p.localdomain
                     locate_script='/tmp/clone/POC_REPO/script_to_run'
                     bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
-                    echo "UAT container updated"
+                    echo "ST26269405p: TEST server is backup and update"
                     """
                 }
             }
@@ -28,11 +28,14 @@ pipeline {
       
         stage('ST36269405p') {
             steps {
-                input('Do you want to update to UAT container?')
+                sh 'curl -Is http://testsvr6269405p.localdomain | head -n 1 > /tmp/TEST-result-file'
+				echo 'ST6269405p: Test result for TEST server is generated: TEST-result-file'
             }
         }
         stage('ST46269405p') {
             steps {
+                echo "ST46269405p: Test server's testing result has been inspected"
+                    //script{}
                 input('Do you want to deploy to Production container?')
             }
         }
