@@ -68,7 +68,10 @@ pipeline {
                     sh """
                     docker stop TESTsvr6269405p
                     docker rm TESTsvr6269405p
-                    docker run --name TESTsvr6269405p bkup-test-image
+                    docker run -d --privileged --network customnetwork -it -h TESTsvr6269405p.localdomain --name TESTsvr6269405p --add-host=TESTsvr6269405p.localdomain:172.20.113.60 --ip=192.168.20.100 bkup-test-image tail -f /dev/null
+                    service ssh start
+                    service apache2 start
+
                     """  
         }
                 }
