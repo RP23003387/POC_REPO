@@ -15,12 +15,12 @@ pipeline {
                     sh """
                     docker rm bkup-test-image || true
                     docker commit TESTsvr6269405p bkup-test-image
-                    puppet resource file /tmp/clone ensure=absent force=true
-                    puppet resource file /tmp/clone ensure=directory
-                    cd /tmp/clone
+                    puppet resource file /tmp/6269405p/work ensure=absent force=true
+                    puppet resource file /tmp/6269405p/work ensure=directory
+                    cd /tmp/6269405p/work
                     git clone https://github.com/RP23003387/POC_REPO.git
                     targets=testsvr6269405p.localdomain
-                    locate_script='/tmp/clone/POC_REPO/script_to_run'
+                    locate_script='/tmp/6269405p/work/POC_REPO/script_to_run'
                     bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "ST26269405p: TEST server is backup and update"
                     """
@@ -57,7 +57,7 @@ pipeline {
                     echo 'ST56269405p: Proceed to Production Phase'
                     sh """
                     targets=prodsvr6269405p.localdomain
-                    locate_script='/tmp/clone/POC_REPO/script_to_run'
+                    locate_script='/tmp/6269405p/work/POC_REPO/script_to_run'
                     bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "Production container updated"
                     """
