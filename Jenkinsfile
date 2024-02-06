@@ -20,7 +20,7 @@ pipeline {
                     cd /tmp/6269405p/work
                     git clone https://github.com/RP23003387/POC_REPO.git
                     targets=testsvr6269405p.localdomain
-                    locate_script='/tmp/6269405p/work/POC_REPO/script_to_run'
+                    locate_script='/tmp/6269405p/work/POC_REPO/6269405p_script'
                     bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "ST26269405p: TEST server is backup and update"
                     """
@@ -57,7 +57,7 @@ pipeline {
                     echo 'ST56269405p: Proceed to Production Phase'
                     sh """
                     targets=prodsvr6269405p.localdomain
-                    locate_script='/tmp/6269405p/work/POC_REPO/script_to_run'
+                    locate_script='/tmp/6269405p/work/POC_REPO/6269405p_script'
                     bolt script run \$locate_script -t \$targets -u raju -p raju --no-host-key-check --run-as root
                     echo "Production container updated"
                     """
