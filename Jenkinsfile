@@ -13,6 +13,8 @@ pipeline {
             steps {
                 script {
                     sh """
+                    sh 'docker rm bkup-test-image || true'
+                    sh 'docker commit TESTsvr6269405p bkup-test-image'
                     puppet resource file /tmp/clone ensure=absent force=true
                     puppet resource file /tmp/clone ensure=directory
                     cd /tmp/clone
