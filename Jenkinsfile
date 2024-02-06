@@ -30,7 +30,7 @@ pipeline {
       
         stage('ST36269405p') {
             steps {
-                sh 'curl -Is http://testsvr6269405p.localdomain | head -n 1 > /tmp/TEST-result-file'
+                sh 'curl -Is http://testsvr6269405p.localdomain | head -n 1 > /tmp/TEST-result-file.txt'
 				echo 'ST6269405p: Test result for TEST server is generated: TEST-result-file'
             }
         }
