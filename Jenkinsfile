@@ -64,6 +64,11 @@ pipeline {
                 }
                 else
                         echo "ST56269405p: Rollback Test Server"
+                    sh """
+                    docker stop TESTsvr6269405p
+                    docker rm TESTsvr6269405p
+                    docker run --name TESTsvr6269405p bkup-test-image
+                    """  
             }
         }
         }
