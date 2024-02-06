@@ -34,9 +34,14 @@ pipeline {
         }
         stage('ST46269405p') {
             steps {
-                echo "ST46269405p: Test server's testing result has been inspected"
-                    //script{}
-                input('Do you want to deploy to Production container?')
+                echo "ST46269405p: Test server's testig result has been inspected"
+                    script{
+                        v2 = input ( 
+		                       			message: 'Action',
+		                       			parameters: [choice(name:'',choices: ['Proceed Production', 'Rollback Test'])]
+		                            	   )
+                    }
+               
             }
         }
         stage('ST56269405p') {
@@ -45,6 +50,9 @@ pipeline {
             }
             steps {
                 script {
+                            if (v2 == 'Proceed Production') 
+					{
+                    echo 'ST56269405p: Proceed to Production Phase'
                     sh """
                     targets=prodsvr6269405p.localdomain
                     locate_script='/tmp/clone/POC_REPO/script_to_run'
@@ -52,11 +60,14 @@ pipeline {
                     echo "Production container updated"
                     """
                 }
+                else
+                        echo "ST56269405p: Reollback Test Server"
             }
         }
-        stage('Completed updating Operation') {
+        }
+        stage ('ST56269405p'){
             steps {
-                echo 'Completed updating to Production Container'
+                echo 'ST56269405p: Completed updating to Production Container'
             }
         }
     }
