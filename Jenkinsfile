@@ -34,7 +34,7 @@ pipeline {
         }
         stage('ST46269405p') {
             steps {
-                echo "ST46269405p: Test server's testig result has been inspected"
+                echo "ST46269405p: Test server's testing result has been inspected"
                     script{
                         v2 = input ( 
 		                       			message: 'Action',
@@ -61,13 +61,13 @@ pipeline {
                     """
                 }
                 else
-                        echo "ST56269405p: Reollback Test Server"
+                        echo "ST56269405p: Rollback Test Server"
             }
         }
         }
-        stage ('ST66269405p'){
+        stage('ST66269405p'){
             steps {
-                echo 'ST56269405p: Completed updating to Production Container'
+                echo 'ST66269405p: Completed updating to Production Container'
             }
         }
     }
